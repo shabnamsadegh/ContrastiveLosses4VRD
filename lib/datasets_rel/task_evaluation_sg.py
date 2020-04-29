@@ -245,11 +245,11 @@ def eval_rel_results(all_results, output_dir, do_val=True, do_vis=False, do_spec
             # print('Excel-friendly format:')
             # print(excel_str.strip()[:-1])
     
-#     print('Saving topk dets...')
-#     topk_dets_f = os.path.join(output_dir, 'rel_detections_topk.pkl')
-#     with open(topk_dets_f, 'wb') as f:
-#         pickle.dump(topk_dets, f, pickle.HIGHEST_PROTOCOL)
-#     logger.info('topk_dets size: {}'.format(len(topk_dets)))
+    print('Saving topk dets...')
+    topk_dets_f = os.path.join(output_dir, 'rel_detections_topk.pkl')
+    with open(topk_dets_f, 'wb') as f:
+        pickle.dump(topk_dets, f, pickle.HIGHEST_PROTOCOL)
+    logger.info('topk_dets size: {}'.format(len(topk_dets)))
     print('Done.')
 
 
