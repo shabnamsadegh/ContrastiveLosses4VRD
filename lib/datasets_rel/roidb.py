@@ -1,7 +1,3 @@
-# Adapted from Detectron.pytorch/lib/datasets/roidb.py
-# for this project by Ji Zhang, 2019
-#
-# --------------------------------------------------------
 # Copyright (c) 2017-present, Facebook, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +27,7 @@ import numpy as np
 import utils.boxes as box_utils
 import utils.blob as blob_utils
 from core.config import cfg
-from .json_dataset_rel import JsonDatasetRel
+from .json_dataset import JsonDataset
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +38,7 @@ def combined_roidb_for_training(dataset_names, proposal_files):
     which involves caching certain types of metadata for each roidb entry.
     """
     def get_roidb(dataset_name, proposal_file):
-        ds = JsonDatasetRel(dataset_name)
+        ds = JsonDataset(dataset_name)
         roidb = ds.get_roidb(
             gt=True,
             proposal_file=proposal_file,
@@ -53,6 +49,7 @@ def combined_roidb_for_training(dataset_names, proposal_files):
             extend_with_flipped_entries(roidb, ds)
         logger.info('Loaded dataset: {:s}'.format(ds.name))
         return roidb
+
     if isinstance(dataset_names, six.string_types):
         dataset_names = (dataset_names, )
     if isinstance(proposal_files, six.string_types):
@@ -60,11 +57,13 @@ def combined_roidb_for_training(dataset_names, proposal_files):
     if len(proposal_files) == 0:
         proposal_files = (None, ) * len(dataset_names)
     assert len(dataset_names) == len(proposal_files)
+    print("Shabnammmmmmmmmmmmmmmmmmmmmmmm",dataset_names)
     roidbs = [get_roidb(*args) for args in zip(dataset_names, proposal_files)]
     roidb = roidbs[0]
     for r in roidbs[1:]:
         roidb.extend(r)
     roidb = filter_for_training(roidb)
+
     if cfg.TRAIN.ASPECT_GROUPING or cfg.TRAIN.ASPECT_CROPPING:
         logger.info('Computing image aspect ratios and ordering the ratios...')
         ratio_list, ratio_index = rank_for_training(roidb)
@@ -97,29 +96,12 @@ def extend_with_flipped_entries(roidb, dataset):
         boxes[:, 0] = width - oldx2 - 1
         boxes[:, 2] = width - oldx1 - 1
         assert (boxes[:, 2] >= boxes[:, 0]).all()
-        # sbj
-        sbj_gt_boxes = entry['sbj_gt_boxes'].copy()
-        oldx1 = sbj_gt_boxes[:, 0].copy()
-        oldx2 = sbj_gt_boxes[:, 2].copy()
-        sbj_gt_boxes[:, 0] = width - oldx2 - 1
-        sbj_gt_boxes[:, 2] = width - oldx1 - 1
-        assert (sbj_gt_boxes[:, 2] >= sbj_gt_boxes[:, 0]).all()
-        # obj
-        obj_gt_boxes = entry['obj_gt_boxes'].copy()
-        oldx1 = obj_gt_boxes[:, 0].copy()
-        oldx2 = obj_gt_boxes[:, 2].copy()
-        obj_gt_boxes[:, 0] = width - oldx2 - 1
-        obj_gt_boxes[:, 2] = width - oldx1 - 1
-        assert (obj_gt_boxes[:, 2] >= obj_gt_boxes[:, 0]).all()
-        # now flip
         flipped_entry = {}
-        dont_copy = ('boxes', 'sbj_gt_boxes', 'obj_gt_boxes', 'segms', 'gt_keypoints', 'flipped')
+        dont_copy = ('boxes', 'flipped')
         for k, v in entry.items():
             if k not in dont_copy:
                 flipped_entry[k] = v
         flipped_entry['boxes'] = boxes
-        flipped_entry['sbj_gt_boxes'] = sbj_gt_boxes
-        flipped_entry['obj_gt_boxes'] = obj_gt_boxes
         flipped_entry['flipped'] = True
         flipped_roidb.append(flipped_entry)
     roidb.extend(flipped_roidb)
@@ -140,9 +122,7 @@ def filter_for_training(roidb):
                            (overlaps >= cfg.TRAIN.BG_THRESH_LO))[0]
         # image is only valid if such boxes exist
         valid = len(fg_inds) > 0 or len(bg_inds) > 0
-        if cfg.MODEL.KEYPOINTS_ON:
-            # If we're training for keypoints, exclude images with no keypoints
-            valid = valid and entry['has_visible_keypoints']
+        
         return valid
 
     num = len(roidb)

@@ -34,6 +34,7 @@ from utils.logging import setup_logging
 from utils.timer import Timer
 from utils_rel.training_stats_rel import TrainingStats
 
+
 # Set up logging and load config options
 logger = setup_logging(__name__)
 logging.getLogger('roi_data.loader').setLevel(logging.INFO)
@@ -176,6 +177,26 @@ def main():
         # cfg.MODEL.NUM_CLASSES = 62
         cfg.MODEL.NUM_CLASSES = 58
         cfg.MODEL.NUM_PRD_CLASSES = 9  # rel, exclude background
+    elif args.dataset == "imaterialist":
+        cfg.TRAIN.DATASETS = ('imaterialist_train',)
+        cfg.MODEL.NUM_CLASSES = 47 #1 more than actual classes
+        cfg.MODEL.NUM_PRD_CLASSES = 2 #"none" "with" 
+    elif args.dataset == "imat_attr":
+        cfg.TRAIN.DATASETS = ('imaterialist_attributes_train',)
+        cfg.MODEL.NUM_CLASSES = 47 #1 more than actual classes
+        cfg.MODEL.NUM_PRD_CLASSES = 342 #"with" +attributes 
+    elif args.dataset == "imat_only_attr":
+        cfg.TRAIN.DATASETS = ('imaterialist_att_only_train',)
+        cfg.MODEL.NUM_CLASSES = 47 #1 more than actual classes
+        cfg.MODEL.NUM_PRD_CLASSES = 342 #"with" +attributes
+    elif args.dataset == "imat_attr_color":
+        cfg.TRAIN.DATASETS = ('imaterialist_attr_color_train',)
+        cfg.MODEL.NUM_CLASSES = 47 #1 more than actual classes
+        cfg.MODEL.NUM_PRD_CLASSES = 350 #"with" +attributes
+    elif args.dataset == "imat_attr_parent":
+        cfg.TRAIN.DATASETS = ('imaterialist_attr_parent_train',)
+        cfg.MODEL.NUM_CLASSES = 47 #1 more than actual classes
+        cfg.MODEL.NUM_PRD_CLASSES = 342 #"with" +attributes 
     else:
         raise ValueError("Unexpected args.dataset: {}".format(args.dataset))
 
@@ -367,7 +388,7 @@ def main():
 
     ### Training Setups ###
     args.run_name = misc_utils.get_run_name() + '_step_with_prd_cls_v' + str(cfg.MODEL.SUBTYPE)
-    output_dir = misc_utils.get_output_dir(args, args.run_name)
+    output_dir = misc_utils.get_output_dir(args, args.run_name) + "____4130b"
     args.cfg_filename = os.path.basename(args.cfg_file)
 
     if not args.no_save:

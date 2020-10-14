@@ -127,9 +127,29 @@ if __name__ == '__main__':
         cfg.TEST.DATASETS = ('vrd_val',)
         cfg.MODEL.NUM_CLASSES = 101
         cfg.MODEL.NUM_PRD_CLASSES = 70  # exclude background
+    elif args.dataset == "imaterialist":
+        cfg.TEST.DATASETS = ('imaterialist_test',)
+        cfg.MODEL.NUM_CLASSES = 47
+        cfg.MODEL.NUM_PRD_CLASSES = 2  # exclude background
+    elif args.dataset == "imat_attr":
+        cfg.TEST.DATASETS = ('imaterialist_attributes_test',)
+        cfg.MODEL.NUM_CLASSES = 47 #1 more than actual classes
+        cfg.MODEL.NUM_PRD_CLASSES = 342 #"with" +attributes 
+    elif args.dataset == "imat_only_attr":
+        cfg.TEST.DATASETS = ('imaterialist_att_only_test',)
+        cfg.MODEL.NUM_CLASSES = 47 #1 more than actual classes
+        cfg.MODEL.NUM_PRD_CLASSES = 342 #"with" +attributes 
+    elif args.dataset == "imat_attr_color":
+        cfg.TEST.DATASETS = ('imaterialist_attr_color_test',)
+        cfg.MODEL.NUM_CLASSES = 47 #1 more than actual classes
+        cfg.MODEL.NUM_PRD_CLASSES = 350 #"with" +attributes +colors
+    elif args.dataset == "imat_attr_parent":
+        cfg.TEST.DATASETS = ('imaterialist_attr_parent_test',)
+        cfg.MODEL.NUM_CLASSES = 47 #1 more than actual classes
+        cfg.MODEL.NUM_PRD_CLASSES = 342 #"with" +attributes 
     else:  # For subprocess call
         assert cfg.TEST.DATASETS, 'cfg.TEST.DATASETS shouldn\'t be empty'
-
+    
     assert_and_infer_cfg()
     
     if not cfg.MODEL.RUN_BASELINE:
@@ -158,12 +178,16 @@ if __name__ == '__main__':
             det_file = os.path.join(args.output_dir, 'rel_detections_gt_boxes_sgcls.pkl')
     else:
         det_file = os.path.join(args.output_dir, 'rel_detections.pkl')
+    
+
     if os.path.exists(det_file):
         logger.info('Loading results from {}'.format(det_file))
         with open(det_file, 'rb') as f:
             all_results = pickle.load(f)
         logger.info('Starting evaluation now...')
-        if args.dataset.find('vg') >= 0 or args.dataset.find('vrd') >= 0:
+        
+    
+        if args.dataset.find('vg') >= 0 or args.dataset.find('vrd') >= 0 or args.dataset.find('imat') >= 0:
             task_evaluation_vg_and_vrd.eval_rel_results(all_results, args.output_dir, args.do_val)
         else:
             task_evaluation_sg.eval_rel_results(all_results, args.output_dir, args.do_val, args.do_vis, args.do_special)
