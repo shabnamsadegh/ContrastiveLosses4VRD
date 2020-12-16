@@ -137,4 +137,104 @@ DATASETS = {
         ANN_FN3:
             _DATA_DIR + '/vrd/predicates.json',
     },
+    'imaterialist_train': {
+        IM_DIR:
+            _DATA_DIR + '/imaterialist/train',
+        ANN_FN:
+            _DATA_DIR + '/imaterialist2/train_detections.json',#'/imaterialist/detections_train.json',
+        ANN_FN2:
+            _DATA_DIR + '/imaterialist2/rel_annotations_only_with_train.json',
+        ANN_FN3:
+            _DATA_DIR + '/imaterialist/predicates.json',
+    },
+    'imaterialist_test': {
+        IM_DIR:
+            _DATA_DIR + '/imaterialist/train',
+        ANN_FN:
+            _DATA_DIR + '/imaterialist2/test_detections.json',
+        ANN_FN2:
+            _DATA_DIR + '/imaterialist2/rel_annotations_only_with_test.json',
+        ANN_FN3:
+            _DATA_DIR + '/imaterialist/predicates.json',
+    },
+    'imaterialist_attributes_train': {
+        IM_DIR:
+            _DATA_DIR + '/imaterialist/train',
+        ANN_FN:
+            _DATA_DIR + '/imaterialist2/train_detections.json',
+        ANN_FN2:
+            _DATA_DIR + '/imaterialist2/rel_annotations_attributes_train.json',
+        ANN_FN3:
+            _DATA_DIR + '/imaterialist/predicates_attributes.json',
+    },
+    'imaterialist_attributes_test': {
+        IM_DIR:
+            _DATA_DIR + '/imaterialist/train',
+        ANN_FN:
+            _DATA_DIR + '/imaterialist2/test_detections.json',
+        ANN_FN2:
+            _DATA_DIR + '/imaterialist2/rel_annotations_attributes_test.json',
+        ANN_FN3:
+            _DATA_DIR + '/imaterialist/predicates_attributes.json',
+    },
+    'imaterialist_att_only_train': {
+        IM_DIR:
+            _DATA_DIR + '/imaterialist/train',
+        ANN_FN:
+            _DATA_DIR + '/imaterialist2/train_detections.json',
+        ANN_FN2:
+            _DATA_DIR + '/imaterialist2/rel_annotations_only_attr_train.json',
+        ANN_FN3:
+            _DATA_DIR + '/imaterialist/predicates_attributes.json',
+    },
+    'imaterialist_att_only_test': {
+        IM_DIR:
+            _DATA_DIR + '/imaterialist/train',
+        ANN_FN:
+            _DATA_DIR + '/imaterialist2/test_detections.json',
+        ANN_FN2:
+            _DATA_DIR + '/imaterialist2/rel_annotations_only_attr_test.json',
+        ANN_FN3:
+            _DATA_DIR + '/imaterialist/predicates_attributes.json',
+    },
+    'imaterialist_attr_color_train': {
+        IM_DIR:
+            _DATA_DIR + '/imaterialist/train',
+        ANN_FN:
+            _DATA_DIR + '/imaterialist2/train_detections.json',
+        ANN_FN2:
+            _DATA_DIR + '/imaterialist2/rel_annotations_attr_color_train.json',
+        ANN_FN3:
+            _DATA_DIR + '/imaterialist/predicates_attributes-colors.json',
+    },
+    'imaterialist_attr_color_test': {
+        IM_DIR:
+            _DATA_DIR + '/imaterialist/train',
+        ANN_FN:
+            _DATA_DIR + '/imaterialist2/test_detections.json',
+        ANN_FN2:
+            _DATA_DIR + '/imaterialist2/rel_annotations_attr_color_test.json',
+        ANN_FN3:
+            _DATA_DIR + '/imaterialist/predicates_attributes-colors.json',
+    },
+    'imaterialist_attr_parent_train': {
+        IM_DIR:
+            _DATA_DIR + '/imaterialist/train',
+        ANN_FN:
+            _DATA_DIR + '/imaterialist2/train_detections.json',
+        ANN_FN2:
+            _DATA_DIR + '/imaterialist2/rel_annotations_attr_parent_train.json',
+        ANN_FN3:
+            _DATA_DIR + '/imaterialist/predicates_attributes-colors.json',
+    },
+    'imaterialist_attr_parent_test': {
+        IM_DIR:
+            _DATA_DIR + '/imaterialist/train',
+        ANN_FN:
+            _DATA_DIR + '/imaterialist2/test_detections.json',
+        ANN_FN2:
+            _DATA_DIR + '/imaterialist2/rel_annotations_attr_parent_test.json',
+        ANN_FN3:
+            _DATA_DIR + '/imaterialist/predicates_attributes-colors.json',
+    }
 }

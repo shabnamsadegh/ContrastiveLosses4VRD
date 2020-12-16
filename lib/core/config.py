@@ -1085,7 +1085,7 @@ __C.CROP_RESIZE_WITH_MAX_POOL = True
 # [Infered value]
 __C.CUDA = False
 
-__C.DEBUG = False
+__C.DEBUG = False #shabnam#False
 
 # [Infered value]
 __C.PYTORCH_VERSION_LESS_THAN_040 = False

@@ -29,15 +29,16 @@ topk = 100
 
 
 def eval_rel_results(all_results, output_dir, do_val):
-    
     if cfg.TEST.DATASETS[0].find('vg') >= 0:
         prd_k_set = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20)
     elif cfg.TEST.DATASETS[0].find('vrd') >= 0:
         prd_k_set = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 70)
+    elif cfg.TEST.DATASETS[0].find('imat') >= 0:
+        prd_k_set = (1, 5, 10, 20, 70)
     else:
         prd_k_set = (1, 2, 3, 4, 5, 6, 7, 8, 9)
         
-    if cfg.TEST.DATASETS[0].find('vg') >= 0:
+    if cfg.TEST.DATASETS[0].find('vg') >= 0 or cfg.TEST.DATASETS[0].find('imat') >= 0:
         eval_sets = (False,)
     else:
         eval_sets = (False, True)
@@ -49,7 +50,7 @@ def eval_rel_results(all_results, output_dir, do_val):
         for prd_k in prd_k_set:
             print('prd_k = {}:'.format(prd_k))
 
-            recalls = {20: 0, 50: 0, 100: 0}
+            recalls = {1:0, 5:0, 10:0 , 20: 0, 50: 0, 100: 0}
             if do_val:
                 all_gt_cnt = 0
 
@@ -139,8 +140,8 @@ def eval_rel_results(all_results, output_dir, do_val):
                                               gt_labels_sbj=gt_labels_sbj,
                                               gt_labels_obj=gt_labels_obj,
                                               gt_labels_prd=gt_labels_prd))
-
             if do_val:
+                print(all_gt_cnt)
                 for k in recalls:
                     recalls[k] = float(recalls[k]) / (float(all_gt_cnt) + 1e-12)
                 print_stats(recalls)

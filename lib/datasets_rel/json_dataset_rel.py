@@ -90,12 +90,14 @@ class JsonDatasetRel(object):
             for k, v in self.json_category_id_to_contiguous_id.items()
         }
         self._init_keypoints()
-
+        
+        
         assert ANN_FN2 in DATASETS[name] and ANN_FN3 in DATASETS[name]
         with open(DATASETS[name][ANN_FN2]) as f:
             self.rel_anns = json.load(f)
         with open(DATASETS[name][ANN_FN3]) as f:
             prd_categories = json.load(f)
+        
         self.obj_classes = self.classes[1:]  # excludes background for now
         self.num_obj_classes = len(self.obj_classes)
         # self.prd_classes = ['__background__'] + prd_categories
@@ -189,6 +191,7 @@ class JsonDatasetRel(object):
                 '_add_proposals_from_file took {:.3f}s'.
                 format(self.debug_timer.toc(average=False))
             )
+        
         _add_class_assignments(roidb)
         return roidb
 
@@ -339,11 +342,13 @@ class JsonDatasetRel(object):
         prd_gt_classes = np.zeros(len(im_rels), dtype=entry['prd_gt_classes'].dtype)
         for ix, rel in enumerate(im_rels):
             # sbj
-            sbj_gt_box = box_utils_rel.y1y2x1x2_to_x1y1x2y2(rel['subject']['bbox'])
+            #sbj_gt_box = box_utils_rel.y1y2x1x2_to_x1y1x2y2(rel['subject']['bbox']) shabnam
+            sbj_gt_box = box_utils_rel.xywh_to_xyxy(rel['subject']['bbox']) 
             sbj_gt_boxes[ix] = sbj_gt_box
             sbj_gt_classes[ix] = rel['subject']['category']  # excludes background
             # obj
-            obj_gt_box = box_utils_rel.y1y2x1x2_to_x1y1x2y2(rel['object']['bbox'])
+            #obj_gt_box = box_utils_rel.y1y2x1x2_to_x1y1x2y2(rel['object']['bbox']) shabnam
+            obj_gt_box = box_utils_rel.xywh_to_xyxy(rel['object']['bbox'])
             obj_gt_boxes[ix] = obj_gt_box
             obj_gt_classes[ix] = rel['object']['category']  # excludes background
             # prd
@@ -534,6 +539,7 @@ def add_rel_proposals(roidb, sbj_rois, obj_rois, det_rois, scales):
         im_det_boxes = det_rois[det_idx, 1:] * inv_im_scale
         sbj_gt_boxes = entry['sbj_gt_boxes']
         obj_gt_boxes = entry['obj_gt_boxes']
+        
         unique_sbj_gt_boxes = np.unique(sbj_gt_boxes, axis=0)
         unique_obj_gt_boxes = np.unique(obj_gt_boxes, axis=0)
         # sbj_gt w/ obj_det

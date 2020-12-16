@@ -39,6 +39,9 @@ def get_rel_counts(ds_name, must_overlap=True):
     elif ds_name.find('vrd') >= 0:
         with open(DATASETS['vrd_train'][ANN_FN2]) as f:
             train_data = json.load(f)
+    elif ds_name.find('imaterialist') >= 0:
+        with open(DATASETS['imaterialist_train'][ANN_FN2]) as f:
+            train_data = json.load(f)
     else:
         raise NotImplementedError
 
@@ -57,8 +60,8 @@ def get_rel_counts(ds_name, must_overlap=True):
         # get all object boxes
         gt_box_to_label = {}
         for i, rel in enumerate(im_rels):
-            sbj_box = box_utils_rel.y1y2x1x2_to_x1y1x2y2(rel['subject']['bbox'])
-            obj_box = box_utils_rel.y1y2x1x2_to_x1y1x2y2(rel['object']['bbox'])
+            sbj_box = box_utils_rel.xywh_to_xyxy(rel['subject']['bbox'])#.y1y2x1x2_to_x1y1x2y2(rel['subject']['bbox'])
+            obj_box = box_utils_rel.xywh_to_xyxy(rel['object']['bbox'])#.y1y2x1x2_to_x1y1x2y2(rel['object']['bbox'])
             sbj_lbl = rel['subject']['category']  # not include background
             obj_lbl = rel['object']['category']  # not include background
             prd_lbl = rel['predicate']  # not include background
@@ -66,7 +69,6 @@ def get_rel_counts(ds_name, must_overlap=True):
                 gt_box_to_label[tuple(sbj_box)] = sbj_lbl
             if tuple(obj_box) not in gt_box_to_label:
                 gt_box_to_label[tuple(obj_box)] = obj_lbl
-            
             fg_matrix[sbj_lbl, obj_lbl, prd_lbl + 1] += 1
         
         if cfg.MODEL.USE_OVLP_FILTER:
@@ -81,8 +83,8 @@ def get_rel_counts(ds_name, must_overlap=True):
             # consider all pairs of boxes, overlapped or non-overlapped
             for b1, l1 in gt_box_to_label.items():
                 for b2, l2 in gt_box_to_label.items():
-                    if b1 == b2:
-                        continue
+                    #if b1 == b2: shabnam commented it
+                        #continue
                     bg_matrix[l1, l2] += 1
 
     return fg_matrix, bg_matrix
@@ -91,7 +93,7 @@ def get_rel_counts(ds_name, must_overlap=True):
 # This function is adapted from Rowan Zellers:
 # https://github.com/rowanz/neural-motifs/blob/master/lib/get_dataset_counts.py
 # Modified for this project
-def box_filter(boxes, must_overlap=False):
+def box_filter(boxes, must_overlap=False):#shabnam: what is this?
     """ Only include boxes that overlap as possible relations. 
     If no overlapping boxes, use all of them."""
     n_cands = boxes.shape[0]

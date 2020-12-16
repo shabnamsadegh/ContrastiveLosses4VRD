@@ -1,0 +1,8 @@
+data/
+Outputs/
+trained_models/
+detection_models/
+Fig52/
+Fig5/
+**/__pycache__/
+**/.ipynb_checkpoints/

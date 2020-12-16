@@ -130,3 +130,20 @@ def y1y2x1x2_to_x1y1x2y2(y1y2x1x2):
     x2 = y1y2x1x2[3]
     y2 = y1y2x1x2[1]
     return [x1, y1, x2, y2]
+
+def xywh_to_xyxy(xywh):
+    """Convert [x1 y1 w h] box format to [x1 y1 x2 y2] format."""
+    if isinstance(xywh, (list, tuple)):
+        # Single box given as a list of coordinates
+        assert len(xywh) == 4
+        x1, y1 = xywh[0], xywh[1]
+        x2 = x1 + np.maximum(0., xywh[2] - 1.)
+        y2 = y1 + np.maximum(0., xywh[3] - 1.)
+        return (x1, y1, x2, y2)
+    elif isinstance(xywh, np.ndarray):
+        # Multiple boxes given as a 2D ndarray
+        return np.hstack(
+            (xywh[:, 0:2], xywh[:, 0:2] + np.maximum(0, xywh[:, 2:4] - 1))
+        )
+    else:
+        raise TypeError('Argument xywh must be a list, tuple, or numpy array.')
